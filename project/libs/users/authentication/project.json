@@ -1,0 +1,20 @@
+{
+  "name": "authentication",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/users/authentication/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/users/authentication",
+        "tsConfig": "libs/users/authentication/tsconfig.lib.json",
+        "packageJson": "libs/users/authentication/package.json",
+        "main": "libs/users/authentication/src/index.ts",
+        "assets": ["libs/users/authentication/*.md"]
+      }
+    }
+  }
+}
