@@ -1,0 +1,18 @@
+services:
+  readme.users.mongo:
+    image: mongo:4.4
+    restart: always
+    container_name: readme.users.mongo
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_NAME}
+
+    ports:
+      - 27017:27017
+
+    volumes:
+      - readme.mongo.users:/data/db
+volumes:
+  readme.mongo.users:
