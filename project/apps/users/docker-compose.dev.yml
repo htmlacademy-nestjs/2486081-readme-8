@@ -14,5 +14,12 @@ services:
 
     volumes:
       - readme.mongo.users:/data/db
+
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@$localhost:27017/?authSource=${MONGO_NAME} --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   readme.mongo.users:
