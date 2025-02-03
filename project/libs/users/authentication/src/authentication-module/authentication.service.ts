@@ -1,23 +1,31 @@
-import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { BlogUserEntity, BlogUserRepository } from "@project/blog-user";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from "./authentication.constant";
 import { LoginUserDto } from "../dto/login-user.dto";
-import { dbConfig} from "@project/user-config"
+import { User, Token} from "@project/core";
+import { JwtService } from "@nestjs/jwt";
+//import { refreshTokenConfig } from "@project/user-config";
 import { ConfigType } from "@nestjs/config";
+import { createJWTPayload } from '@project/helpers'
+import { RefreshTokenService } from "../refresh-token-module/refresh-token.service";
+import { jwtConfig } from "@project/user-config";
+
 
 @Injectable()
 export class AuthenticationService {
+  private readonly logger = new Logger(AuthenticationService.name);
+
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
-
-    @Inject(dbConfig.KEY)
-    private readonly databaseConfig: ConfigType<typeof dbConfig>
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY) private readonly jwtOptions: ConfigType<typeof jwtConfig>,
+    private readonly refreshTokenService: RefreshTokenService
   ) {}
 
   public async register(dto: CreateUserDto) {
     const { email, name, password} = dto;
-    const blogUser = { email, name, urlAvatar: '', password: '' }
+    const blogUser = { email, name, urlAvatar: '', password: ''}
     const existUser = await this.blogUserRepository.findByEmail(email);
 
     if (existUser) {
@@ -25,7 +33,7 @@ export class AuthenticationService {
     }
 
     const userEntity = await new BlogUserEntity(blogUser).setPassword(password);
-    this.blogUserRepository.save(userEntity);
+    await this.blogUserRepository.save(userEntity);
 
     return userEntity;
   }
@@ -46,10 +54,39 @@ export class AuthenticationService {
   }
 
   public async findUserById(id: string) {
-    const existsUser = await this.blogUserRepository.findByID(id)
+    const existsUser = await this.blogUserRepository.findById(id)
 
     if(! existsUser) {
       throw new Error;
+    }
+
+    return existsUser;
+  }
+
+  public async createUserToken(user: User): Promise<Token> {
+    const accessTokenPayload = createJWTPayload(user);
+    const refreshTokenPayload = { ... accessTokenPayload, tokenId: crypto.randomUUID() }
+    await this.refreshTokenService.createRefreshSession(refreshTokenPayload)
+
+    try {
+      const accessToken = await this.jwtService.signAsync(accessTokenPayload);
+      const refreshToken = await this.jwtService.signAsync(refreshTokenPayload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.refreshTokenExpiresIn
+      })
+
+      return { accessToken,  refreshToken}
+    } catch (error) {
+      this.logger.error('[Token generation error]: ' + error.message);
+      throw new HttpException('Error when creating the token.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async getUserByEmail(email: string) {
+    const existsUser = await this.blogUserRepository.findByEmail(email)
+
+    if (! existsUser ) {
+      throw new NotFoundException(`User with email ${email} not found`)
     }
 
     return existsUser;

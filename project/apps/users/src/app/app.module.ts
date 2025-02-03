@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AuthenticationModule} from '@project/authentication'
 import { BlogUserModule } from '@project/blog-user';
+import { NotifyUserModule } from '@project/notify-user';
 import { getMongooseOptions, UserConfigModule } from '@project/user-config'
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { getMongooseOptions, UserConfigModule } from '@project/user-config'
     UserConfigModule,
     MongooseModule.forRootAsync(
       getMongooseOptions()
-    )
+    ),
+    NotifyUserModule
   ],
   controllers: [],
   providers: [],

@@ -1,0 +1,20 @@
+{
+  "name": "notify-user",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/users/notify-user/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/users/notify-user",
+        "tsConfig": "libs/users/notify-user/tsconfig.lib.json",
+        "packageJson": "libs/users/notify-user/package.json",
+        "main": "libs/users/notify-user/src/index.ts",
+        "assets": ["libs/users/notify-user/*.md"]
+      }
+    }
+  }
+}

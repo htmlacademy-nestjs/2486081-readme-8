@@ -18,11 +18,11 @@ DocumentType extends Document
       return null;
     }
 
-    const plainObject = document.toObject({ versionKey: false }) as ReturnType<T['toPOJO']>
+    const plainObject = document.toObject({getters: true, versionKey: false, flattenObjectIds: true }) as ReturnType<T['toPOJO']>
     return this.entityFactory.create(plainObject)
   }
 
-  public async findByID(id: T["id"]): Promise<T> {
+  public async findById(id: T["id"]): Promise<T> {
     const document = await this.model.findById(id).exec();
     return this.createEntityFromDocument(document);
   }
@@ -45,7 +45,7 @@ DocumentType extends Document
     }
   }
 
-  public async deleteByID(id: T["id"]): Promise<void> {
+  public async deleteById(id: T["id"]): Promise<void> {
     const document = await this.model.findByIdAndDelete(id).exec();
     if (! document) {
       throw new NotFoundException(`Entity with id ${id} not found`)

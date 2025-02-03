@@ -1,7 +1,7 @@
 {
   "name": "blog-models",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/blog/blog-models/src",
+  "sourceRoot": "libs/blog/models/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -9,11 +9,11 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/blog/blog-models",
-        "tsConfig": "libs/blog/blog-models/tsconfig.lib.json",
-        "packageJson": "libs/blog/blog-models/package.json",
-        "main": "libs/blog/blog-models/src/index.ts",
-        "assets": ["libs/blog/blog-models/*.md"]
+        "outputPath": "dist/libs/blog/models",
+        "tsConfig": "libs/blog/models/tsconfig.lib.json",
+        "packageJson": "libs/blog/models/package.json",
+        "main": "libs/blog/models/src/index.ts",
+        "assets": ["libs/blog/models/*.md"]
       }
     }
   }
