@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../../../../node_modules/.prisma/client"
+  output   = "../../../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -14,29 +14,81 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Text {
-  id        String   @id @default(uuid()) @map("id")
-  category  Category[]
-  title     String
-  preview   String
-  content   String
-  tags      String
-  createdAt DateTime @default(now()) @map("created_at")
-  updateAt  DateTime @updatedAt @map("update_at")
-  userId    String  @map("user_id")
-  comments  Comment[]
+model BasePost {
+  id       String   @id @default(uuid()) @map("id")
+  category Category
 
-  @@map("Texts")
+  text     PostsText?  @relation("PostText")
+  textId   String?     @unique
+
+  video     PostsVideo? @relation("PostVideo")
+  videoId   String?     @unique
+
+  url       PostsUrl?   @relation("PostUrl")
+  urlId     String?     @unique
+
+  quote     PostsQuote? @relation("PostQuote")
+  quoteId   String?     @unique
+
+  photo     PostsPhoto? @relation("PostPhoto")
+  photoId   String?     @unique
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  tags      String[]
+  comments  Comment[]
+  userId    String    @map("user_id")
+
+  @@map("base_post")
 }
 
-model Category {
-  id        String   @id @default(uuid()) @map("id")
-  title     String
-  texts     Text[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updateAt  DateTime @updatedAt @map("update_at")
+model PostsText {
+  id      String      @id @default(uuid()) @map("id")
+  title   String
+  preview String
+  text    String
+  postId  String   @unique
+  post    BasePost @relation("PostText", fields: [postId], references: [id])
+}
 
-  @@map("Categories")
+model PostsVideo {
+  id      String      @id @default(uuid()) @map("id")
+  title  String
+  url    String
+  postId String   @unique
+  post   BasePost @relation("PostVideo", fields: [postId], references: [id])
+}
+
+model PostsUrl {
+  id      String      @id @default(uuid()) @map("id")
+  title  String
+  url    String
+  postId String   @unique
+  post   BasePost @relation("PostUrl", fields: [postId], references: [id])
+}
+
+model PostsQuote {
+  id      String      @id @default(uuid()) @map("id")
+  quote  String
+  author String
+  postId String   @unique
+  post   BasePost @relation("PostQuote", fields: [postId], references: [id])
+}
+
+model PostsPhoto {
+  id      String      @id @default(uuid()) @map("id")
+  title    String
+  imageUrl String
+  postId   String   @unique
+  post     BasePost @relation("PostPhoto", fields: [postId], references: [id])
+}
+
+enum Category {
+  TEXT
+  VIDEO
+  URL
+  QUOTE
+  PHOTO
 }
 
 model Comment {
@@ -45,8 +97,8 @@ model Comment {
   createdAt DateTime @default(now()) @map("created_at")
   updateAt  DateTime @updatedAt @map("update_at")
   userId    String
-  text      Text     @relation(fields: [textId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  textId    String   @map("text_id")
+  post      BasePost @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId    String   @map("post_id")
 
   @@map("Comments")
 }

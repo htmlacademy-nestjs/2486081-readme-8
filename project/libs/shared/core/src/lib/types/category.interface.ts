@@ -1,6 +1,7 @@
-export interface Category {
-  id?: string;
-  title: string;
-  createdAt: string;
-  updateAt: string;
+export enum CategoryTitle {
+  Video = 'video',
+  Text = 'text',
+  Url = 'url',
+  Quote = 'quote',
+  Photo ='photo'
 }

@@ -2,7 +2,6 @@ services:
   readme.blog.postgres:
     image: postgres:14-alpine
     container_name: readme.blog.postgres
-
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -11,15 +10,6 @@ services:
       - 5432:5432
     volumes:
       - readme.postgres.blog:/var/lib/postgres/data
-
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d {POSTGRES_PASSWORD}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    networks:
-      - readme.blog
 
   readme.blog.pgadmin:
     image: dpage/pgadmin4
@@ -41,4 +31,4 @@ volumes:
 
 networks:
   readme.blog:
-      driver: bridge
+    driver: bridge

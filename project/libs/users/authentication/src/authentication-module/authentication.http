@@ -1,26 +1,26 @@
-POST http://localhost:5000/api/auth/register HTTP/1.1
+POST http://localhost:4000/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "faya@runt.com",
-  "name": "FayaRunt",
-  "password": "FayaRuntTheBest3656"
+  "email": "admin_test546@local.host",
+  "name": "Admin4",
+  "password": "test123"
 }
 
 ###
 
 # Get user by ID
-GET http://localhost:5000/api/auth/677d1d5678ceb277a208d85a HTTP/1.1
+GET http://localhost:4000/api/auth/679f58f4712b5d9fb914b089 HTTP/1.1
 
 ###
 
 # Login user by email and password
-POST http://localhost:5000/api/auth/login HTTP/1.1
+POST http://localhost:4000/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "faya@runt.com",
-  "password": "FayaRuntTheBest3650"
+  "email": "faya1@runt.com",
+  "password": "FayaRu"
 }
 
 ###

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информационное уведомление</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .header {
+            text-align: center;
+            padding: 10px 0;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .important {
+            color: #d9534f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Здравствуйте, {{user}}!</h1>
+        </div>
+        <div class="content">
+            <p>Вы получили это уведомление, так как подписаны на наши информационные рассылки.</p>
+            <p class="important">Важно: Ваш адрес электронной почты: <strong>{{email}}</strong></p>
+            <p>Если у вас есть вопросы или вы хотите отписаться от рассылки, пожалуйста, свяжитесь с нами.</p>
+        </div>
+    </div>
+</body>
+</html>
